@@ -1,1 +1,95 @@
-
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BetTCC — Simulador de Apostas Esportivas</title>
+<style>
+:root{--bg:#0b0f14;--panel:#121821;--panel2:#18212c;--line:#263241;--text:#f4f7fb;--muted:#9ba8b7;--accent:#2dd47b;--accent2:#1ebd69;--danger:#ff5c6c;--warning:#f5bd4f}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text)}
+button,input{font:inherit}button{cursor:pointer}.app{min-height:100vh}.top{height:70px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 5%;position:sticky;top:0;background:rgba(11,15,20,.94);backdrop-filter:blur(10px);z-index:10}.brand{font-size:22px;font-weight:800}.brand span{color:var(--accent)}.nav{display:flex;gap:8px}.nav button{background:transparent;border:0;color:var(--muted);padding:10px 14px;border-radius:9px}.nav button.active,.nav button:hover{background:var(--panel2);color:#fff}.balance{border:1px solid #29543e;background:#10271c;color:#8ff0b7;padding:9px 13px;border-radius:10px;font-weight:700}
+main{max-width:1250px;margin:auto;padding:34px 5% 70px}.hero{padding:28px 0 20px}.eyebrow{color:var(--accent);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:1.5px}.hero h1{font-size:42px;margin:8px 0}.hero p{color:var(--muted);max-width:680px;line-height:1.6}.notice{border:1px solid #5d4a1d;background:#211b0d;color:#e8d28f;padding:12px 15px;border-radius:10px;font-size:13px}
+.filters{display:flex;gap:10px;margin:22px 0}.pill{border:1px solid var(--line);background:var(--panel);color:var(--muted);padding:9px 15px;border-radius:999px}.pill.active{border-color:var(--accent);color:#fff;background:#10271c}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:16px}.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:18px}.league{color:var(--muted);font-size:12px}.match{display:flex;justify-content:space-between;align-items:center;margin:15px 0}.team{font-weight:700}.vs{color:var(--muted);font-size:12px}.date{color:var(--muted);font-size:12px;margin-top:4px}.odds{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.odd{background:var(--panel2);border:1px solid transparent;color:#fff;border-radius:9px;padding:10px;text-align:center}.odd small{display:block;color:var(--muted);font-size:11px;margin-bottom:4px}.odd:hover{border-color:var(--accent)}.section-title{display:flex;justify-content:space-between;align-items:center;margin:30px 0 14px}.section-title h2{margin:0}.muted{color:var(--muted)}.empty{text-align:center;padding:45px;color:var(--muted);border:1px dashed var(--line);border-radius:14px}
+.slip{position:fixed;right:20px;bottom:20px;width:350px;background:#101720;border:1px solid var(--line);border-radius:16px;box-shadow:0 20px 50px #0008;z-index:20;overflow:hidden}.slip-head{padding:15px 17px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}.slip-body{padding:15px}.betrow{background:var(--panel2);padding:12px;border-radius:10px;margin-bottom:10px}.betrow strong{display:block}.betrow small{color:var(--muted)}.remove{float:right;background:none;border:0;color:var(--danger)}.amount{display:flex;gap:8px;align-items:center;margin:13px 0}.amount input{width:100%;background:var(--panel);border:1px solid var(--line);color:#fff;padding:10px;border-radius:8px}.summary{display:flex;justify-content:space-between;margin:7px 0;color:var(--muted)}.summary b{color:#fff}.primary{width:100%;background:var(--accent);border:0;color:#06130b;padding:12px;border-radius:9px;font-weight:800}.primary:hover{background:var(--accent2)}.danger{background:none;border:0;color:var(--danger)}
+table{width:100%;border-collapse:collapse;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}th,td{text-align:left;padding:14px;border-bottom:1px solid var(--line);font-size:14px}th{color:var(--muted);font-weight:600}.status{padding:5px 8px;border-radius:999px;font-size:11px;font-weight:700}.pending{background:#352b13;color:#f4c85d}.won{background:#103a24;color:#72eaa4}.lost{background:#3a1720;color:#ff8b97}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}.stat span{color:var(--muted);font-size:13px}.stat b{font-size:28px;display:block;margin-top:7px}
+footer{text-align:center;color:#667384;font-size:12px;padding:25px;border-top:1px solid var(--line)}
+@media(max-width:800px){.nav button{display:none}.hero h1{font-size:32px}.slip{left:12px;right:12px;width:auto}.stats{grid-template-columns:1fr}.top{padding:0 15px}main{padding:25px 15px 90px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div class="brand">Bet<span>TCC</span></div>
+  <nav class="nav">
+    <button class="active" onclick="showPage('home',this)">Partidas</button>
+    <button onclick="showPage('history',this)">Minhas apostas</button>
+    <button onclick="showPage('admin',this)">Admin</button>
+  </nav>
+  <div class="balance">💰 <span id="balance">10.000</span> créditos</div>
+</header>
+<main id="main"></main>
+<div id="slip"></div>
+<footer>Projeto acadêmico — plataforma de simulação. Não utiliza dinheiro real, depósitos ou saques.</footer>
+</div>
+<script>
+const state={
+ balance:10000,
+ bets:[],
+ slip:[],
+ events:[
+  {id:1,league:"Campeonato Brasileiro",date:"20/10 • 20:00",home:"Flamengo",away:"Palmeiras",odds:[["Flamengo",2.10],["Empate",3.20],["Palmeiras",2.80]]},
+  {id:2,league:"Campeonato Brasileiro",date:"21/10 • 19:00",home:"Corinthians",away:"Santos",odds:[["Corinthians",1.85],["Empate",3.40],["Santos",3.60]]},
+  {id:3,league:"Champions League",date:"22/10 • 16:00",home:"Real Madrid",away:"Manchester City",odds:[["Real Madrid",2.35],["Empate",3.50],["Manchester City",2.55]]},
+  {id:4,league:"La Liga",date:"23/10 • 17:30",home:"Barcelona",away:"Atlético de Madrid",odds:[["Barcelona",1.90],["Empate",3.45],["Atlético de Madrid",3.75]]}
+ ]
+};
+function money(n){return n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function updateBalance(){document.getElementById('balance').textContent=money(state.balance)}
+function renderHome(){
+document.getElementById('main').innerHTML=`
+<section class="hero"><div class="eyebrow">Simulador esportivo</div><h1>Aposte com créditos virtuais.</h1><p>Escolha seus resultados, monte seu cupom e acompanhe suas apostas em um ambiente criado exclusivamente para demonstração acadêmica.</p><div class="notice">⚠️ Este projeto é uma simulação para TCC. Os créditos não possuem valor monetário.</div></section>
+<div class="filters"><button class="pill active">⚽ Futebol</button><button class="pill">🔥 Destaques</button></div>
+<div class="section-title"><h2>Partidas disponíveis</h2><span class="muted">${state.events.length} eventos</span></div>
+<div class="grid">${state.events.map(e=>`
+<article class="card"><div class="league">${e.league}</div><div class="match"><div><div class="team">${e.home}</div><div class="date">${e.date}</div></div><div class="vs">VS</div><div style="text-align:right"><div class="team">${e.away}</div></div></div>
+<div class="odds">${e.odds.map((o,i)=>`<button class="odd" onclick="addBet(${e.id},${i})"><small>${o[0]}</small><b>${o[1].toFixed(2)}</b></button>`).join('')}</div></article>`).join('')}</div>`;
+renderSlip();
+}
+function addBet(eid,i){
+const e=state.events.find(x=>x.id===eid), o=e.odds[i];
+state.slip=[{eid,i,event:e.home+" x "+e.away,selection:o[0],odd:o[1]}];
+renderSlip();
+}
+function renderSlip(){
+const el=document.getElementById('slip');
+if(!state.slip.length){el.innerHTML='';return}
+const b=state.slip[0];
+el.innerHTML=`<aside class="slip"><div class="slip-head"><b>🎟️ Meu cupom</b><button class="danger" onclick="clearSlip()">×</button></div><div class="slip-body"><div class="betrow"><button class="remove" onclick="clearSlip()">×</button><strong>${b.selection}</strong><small>${b.event} • Odd ${b.odd.toFixed(2)}</small></div><div class="amount"><span>Valor</span><input id="amount" type="number" min="1" max="${state.balance}" value="100" oninput="calc()"></div><div class="summary"><span>Possível retorno</span><b id="return">R$ ${money(100*b.odd)}</b></div><div class="summary"><span>Saldo após aposta</span><b id="after">${money(state.balance-100)}</b></div><button class="primary" onclick="confirmBet()">CONFIRMAR APOSTA</button></div></aside>`;
+}
+function calc(){const n=Number(document.getElementById('amount').value)||0,b=state.slip[0];document.getElementById('return').textContent='R$ '+money(n*b.odd);document.getElementById('after').textContent=money(state.balance-n)}
+function clearSlip(){state.slip=[];renderSlip()}
+function confirmBet(){
+const n=Number(document.getElementById('amount').value),b=state.slip[0];
+if(!n||n<=0||n>state.balance){alert('Valor inválido ou saldo insuficiente.');return}
+state.balance-=n;
+state.bets.unshift({date:new Date().toLocaleDateString('pt-BR'),event:b.event,selection:b.selection,amount:n,odd:b.odd,status:'Pendente',potential:n*b.odd});
+updateBalance();clearSlip();alert('Aposta simulada registrada com sucesso!');showPage('history');
+}
+function renderHistory(){
+document.getElementById('main').innerHTML=`<div class="section-title"><h2>Minhas apostas</h2><span class="muted">${state.bets.length} registrada(s)</span></div>${state.bets.length?`<table><thead><tr><th>Data</th><th>Evento</th><th>Seleção</th><th>Valor</th><th>Odd</th><th>Retorno</th><th>Status</th></tr></thead><tbody>${state.bets.map(b=>`<tr><td>${b.date}</td><td>${b.event}</td><td>${b.selection}</td><td>${money(b.amount)}</td><td>${b.odd.toFixed(2)}</td><td>${money(b.potential)}</td><td><span class="status pending">Pendente</span></td></tr>`).join('')}</tbody></table>`:`<div class="empty">Você ainda não possui apostas.<br><br>Escolha uma partida para começar.</div>`}`;
+}
+function renderAdmin(){
+document.getElementById('main').innerHTML=`<div class="hero" style="padding-top:0"><div class="eyebrow">Área administrativa</div><h1>Painel de controle</h1><p>Área demonstrativa para gerenciamento dos eventos e visualização das operações do sistema.</p></div>
+<div class="stats"><div class="stat"><span>Eventos cadastrados</span><b>${state.events.length}</b></div><div class="stat"><span>Apostas registradas</span><b>${state.bets.length}</b></div><div class="stat"><span>Créditos apostados</span><b>${money(state.bets.reduce((a,b)=>a+b.amount,0))}</b></div></div>
+<div class="section-title"><h2>Eventos</h2></div><table><thead><tr><th>Evento</th><th>Competição</th><th>Data</th><th>Status</th></tr></thead><tbody>${state.events.map(e=>`<tr><td>${e.home} x ${e.away}</td><td>${e.league}</td><td>${e.date}</td><td><span class="status won">Aberto</span></td></tr>`).join('')}</tbody></table>`;
+}
+function showPage(page,btn){
+document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));if(btn)btn.classList.add('active');
+if(page==='home')renderHome();if(page==='history')renderHistory();if(page==='admin')renderAdmin();
+}
+updateBalance();renderHome();
+</script>
+</body>
+</html>
